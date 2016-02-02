@@ -283,3 +283,14 @@ function releaseTask(importance) {
 gulp.task('patch', releaseTask('patch'));
 gulp.task('minor', releaseTask('minor'));
 gulp.task('major', releaseTask('major'));
+
+gulp.task('serve', function(cb) {
+	util.log('Web server started at: http://localhost:8000/');
+	exec('export PORT=8000 && node server.js', function(err) {
+		if(err) {
+			util.log(err);
+		} else {
+			util.log('Web server started at: http://localhost:8000/');
+		}
+	});
+});
