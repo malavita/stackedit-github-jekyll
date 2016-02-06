@@ -36,14 +36,7 @@ gulp.task('constants', function() {
  */
 
 gulp.task('jshint', function() {
-	return gulp.src([
-		'./*.js',
-		'./app/**/*.js',
-		'./public/res/classes/**/*.js',
-		'./public/res/extensions/**/*.js',
-		'./public/res/helpers/**/*.js',
-		'./public/res/providers/**/*.js',
-		'./public/res/*.js'
+	return gulp.src([ 'server.js'
 	])
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
@@ -284,13 +277,24 @@ gulp.task('patch', releaseTask('patch'));
 gulp.task('minor', releaseTask('minor'));
 gulp.task('major', releaseTask('major'));
 
-gulp.task('serve', function(cb) {
+gulp.task('serve', function() {
 	util.log('Web server started at: http://localhost:8000/');
 	exec('export PORT=8000 && node server.js', function(err) {
 		if(err) {
 			util.log(err);
 		} else {
 			util.log('Web server started at: http://localhost:8000/');
+		}
+	});
+});
+
+gulp.task('heroku', function() {
+	util.log('Deploying to heroku...');
+	exec('git push heroku master', function(err) {
+		if(err) {
+			util.log(err);
+		} else {
+			util.log('Done.');
 		}
 	});
 });
