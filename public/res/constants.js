@@ -48,7 +48,7 @@ define([], function() {
 	}
 	if(location.hostname.indexOf("malavita.herokuapp.com") === 0) {
 		constants.BASE_URL = 'malavita.herokuapp.com';
-		constants.GOOGLE_CLIENT_ID = '241271498917-lev37kef013q85avc91am1gccg5g8lrb.apps.googleusercontent.com';
+		constants.GOOGLE_CLIENT_ID = '382949310060-6ngthlje44340tromolftsps0aooh0os.apps.googleusercontent.com';
 	}
 
 	constants.THEME_LIST = {
