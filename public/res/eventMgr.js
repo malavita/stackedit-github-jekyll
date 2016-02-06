@@ -14,6 +14,7 @@ define([
 	"extensions/buttonMarkdownSyntax",
 	"extensions/googleAnalytics",
 	"extensions/twitter",
+	"extensions/flickrUrls",
 	"extensions/dialogAbout",
 	"extensions/dialogManagePublication",
 	"extensions/dialogManageSynchronization",

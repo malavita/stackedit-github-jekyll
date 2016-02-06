@@ -23,6 +23,7 @@ app.post('/pdfExport', require('./pdf').export);
 app.post('/sshPublish', require('./ssh').publish);
 app.post('/picasaImportImg', require('./picasa').importImg);
 app.get('/downloadImport', require('./download').importPublic);
+app.get('/flickrUrl', require('./flickrUrl').gitLinksToImg);
 
 // Serve static resources
 app.use(serveStatic(__dirname + '/../public'));

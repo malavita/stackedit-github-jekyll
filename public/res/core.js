@@ -4,6 +4,7 @@ define([
 	"underscore",
 	"crel",
 	"editor",
+	"extensions/flickrUrls",
 	"layout",
 	"constants",
 	"utils",
@@ -17,7 +18,7 @@ define([
 	"text!html/tooltipSettingsPdfOptions.html",
 	"storage",
 	'pagedown'
-], function($, _, crel, editor, layout, constants, utils, storage, settings, eventMgr, MonetizeJS, bodyEditorHTML, bodyViewerHTML, settingsTemplateTooltipHTML, settingsPdfOptionsTooltipHTML) {
+], function($, _, crel, editor, flickrUrls, layout, constants, utils, storage, settings, eventMgr, MonetizeJS, bodyEditorHTML, bodyViewerHTML, settingsTemplateTooltipHTML, settingsPdfOptionsTooltipHTML) {
 
 	var core = {};
 
@@ -250,7 +251,8 @@ define([
 		});
 		// Custom insert image dialog
 		pagedownEditor.hooks.set("insertImageDialog", function(callback) {
-			core.insertLinkCallback = callback;
+			// implement custom hook here
+			core.insertLinkCallback = flickrUrls.onInsertImage.bind(flickrUrls, callback);
 			if(core.catchModal) {
 				return true;
 			}

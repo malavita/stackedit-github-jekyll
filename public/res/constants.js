@@ -26,6 +26,7 @@ define([], function() {
 	constants.WELCOME_DOCUMENT_TITLE = "Hello!";
 	constants.DOWNLOAD_IMPORT_URL = "/downloadImport";
 	constants.PICASA_IMPORT_IMG_URL = "/picasaImportImg";
+	constants.FLICKR_IMPORT_IMG_URL = "/flickrUrl";
 	constants.SSH_PUBLISH_URL = '/sshPublish';
 	constants.PDF_EXPORT_URL = "/pdfExport";
 	constants.COUCHDB_URL = 'https://stackedit.smileupps.com/documents';
@@ -38,6 +39,13 @@ define([], function() {
 	constants.TUMBLR_PROXY_URL = "https://stackedit-tumblr-proxy-local.herokuapp.com/";
 	constants.WORDPRESS_CLIENT_ID = '23361';
 	constants.WORDPRESS_PROXY_URL = "https://stackedit-io-wordpress-proxy.herokuapp.com/";
+
+	if(location.hostname.indexOf("localhost") === 0) {
+		constants.GOOGLE_CLIENT_ID = '382949310060-6ngthlje44340tromolftsps0aooh0os.apps.googleusercontent.com';
+		constants.GITHUB_CLIENT_ID = '710fc67886ab1ae8fee6';
+		constants.GATEKEEPER_URL = "https://stackedit-io-gatekeeper.herokuapp.com/";
+		constants.TUMBLR_PROXY_URL = "https://stackedit-io-tumblr-proxy.herokuapp.com/";
+	}
 
 	if(location.hostname.indexOf("stackedit.io") === 0) {
 		constants.BASE_URL = constants.MAIN_URL;
