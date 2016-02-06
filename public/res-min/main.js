@@ -13435,91 +13435,32 @@ function() {
  }, o.onTweet = function() {
   a && window.twttr.widgets.load();
  }, o;
-}), define("classes/AsyncTask", [ "underscore", "constants", "utils", "eventMgr" ], function(e, t, n, i) {
- function r(e) {
-  this.finished = !1, this.timeout = t.ASYNC_TASK_DEFAULT_TIMEOUT, this.retryCounter = 0, 
-  this.runCallbacks = [], this.successCallbacks = [], this.errorCallbacks = [], this.force = e;
- }
- function o() {
-  if (c === !0) return void (l + u.timeout < n.currentTime && u.error(new Error("A timeout occurred.")));
-  if (void 0 === u) {
-   if (0 === s.length || !s[0].force && p === !1) return;
-   u = s.shift(), l = n.currentTime, d === !1 && (d = !0, i.onAsyncRunning(!0));
-  }
-  l <= n.currentTime && (c = !0, u.chain());
- }
- function a(t, n, r) {
-  try {
-   e.each(n, function(e) {
-    e(r);
-   });
-  } finally {
-   t.finished = !0, u === t && (u = void 0, c = !1), 0 === s.length ? (d = !1, i.onAsyncRunning(!1)) : o();
-  }
- }
- var s = [];
- r.prototype.onRun = function(e) {
-  this.runCallbacks.push(e);
- }, r.prototype.onSuccess = function(e) {
-  this.successCallbacks.push(e);
- }, r.prototype.onError = function(e) {
-  this.errorCallbacks.push(e);
- };
- var l = 0;
- r.prototype.chain = function(e) {
-  if (l = n.currentTime, n.logStackTrace(), this.finished !== !0) {
-   if (void 0 === this.queue && (this.queue = this.runCallbacks.slice()), void 0 !== e) return void e();
-   if (0 === this.queue.length) return void a(this, this.successCallbacks);
-   var t = this.queue.shift();
-   t();
-  }
- }, r.prototype.error = function(e) {
-  if (n.logStackTrace(), this.finished !== !0) throw e = e || new Error("Unknown error"), 
-  e.message && i.onError(e), a(this, this.errorCallbacks, e), e;
- };
- var c = !1;
- r.prototype.retry = function(e, t) {
-  if (this.finished !== !0) {
-   if (t = t || 5, this.queue = void 0, this.retryCounter >= t) return void this.error(e);
-   var i = 1e3 * Math.pow(2, this.retryCounter++);
-   l = n.currentTime + i, c = !1, o();
-  }
- }, r.prototype.enqueue = function() {
-  s.push(this), o();
- };
- var u, d = !1, p = !1;
- return i.addListener("onUserActive", function() {
-  p = !0;
- }), i.addListener("onPeriodicRun", o), r;
-}), define("extensions/flickrUrls", [ "jquery", "underscore", "constants", "utils", "classes/Extension", "classes/AsyncTask" ], function(e, t, n, i, r, o) {
- var a = new r("flickrUrls", "FlickrUrls", !1, !0);
- return a.onReady = function() {
-  console.log("flickr ready");
- }, a.onInsertImage = function(t, i) {
-  console.log("flickr link");
-  var r, a, s;
-  if (i && i.indexOf("flic.kr") >= 0) {
-   r = i.split(" ")[0], a = r.split("/").pop();
-   var l = new o();
-   l.onRun(function() {
-    e.ajax({
-     url: n.FLICKR_IMPORT_IMG_URL + "?" + e.param({
-      id: a
-     }),
-     timeout: n.AJAX_TIMEOUT,
-     type: "GET"
-    }).done(function(e) {
-     s = e, l.chain();
-    }).fail(function(e) {
-     var t = {
-      code: e.status,
-      message: e.statusText
-     };
-     200 == t.code && (t.message = e.responseText);
-    });
-   });
-  } else t(i);
- }, a;
+}), define("extensions/flickrUrls", [ "jquery", "underscore", "constants", "utils", "classes/Extension" ], function(e, t, n, i, r) {
+ var o = new r("flickrUrls", "FlickrUrls", !1, !0), a = !1;
+ return o.onInsertImage = function(i, r) {
+  var o, s;
+  !a && r && r.indexOf("flic.kr") >= 0 ? (o = r.split(" ")[0], s = o.split("/").pop(), 
+  e.ajax({
+   url: n.FLICKR_IMPORT_IMG_URL + "?" + e.param({
+    id: s
+   }),
+   timeout: n.AJAX_TIMEOUT,
+   type: "GET"
+  }).done(function(e) {
+   var n = t.result(t.findWhere(e.sizes.size, {
+    label: "Large"
+   }), "source");
+   i(n);
+  }).fail(function(e) {
+   var t = {
+    code: e.status,
+    message: e.statusText
+   };
+   console.log(t);
+  })) : i(r);
+ }, o.onOfflineChanged = function(e) {
+  a = e;
+ }, o;
 }), function() {
  function e() {
   if (u) return u;
@@ -25537,6 +25478,62 @@ this.DIFF_EQUAL = DIFF_EQUAL, define("diff_match_patch_uncompressed", function(e
    discussionListCRC: _
   };
  }, l;
+}), define("classes/AsyncTask", [ "underscore", "constants", "utils", "eventMgr" ], function(e, t, n, i) {
+ function r(e) {
+  this.finished = !1, this.timeout = t.ASYNC_TASK_DEFAULT_TIMEOUT, this.retryCounter = 0, 
+  this.runCallbacks = [], this.successCallbacks = [], this.errorCallbacks = [], this.force = e;
+ }
+ function o() {
+  if (c === !0) return void (l + u.timeout < n.currentTime && u.error(new Error("A timeout occurred.")));
+  if (void 0 === u) {
+   if (0 === s.length || !s[0].force && p === !1) return;
+   u = s.shift(), l = n.currentTime, d === !1 && (d = !0, i.onAsyncRunning(!0));
+  }
+  l <= n.currentTime && (c = !0, u.chain());
+ }
+ function a(t, n, r) {
+  try {
+   e.each(n, function(e) {
+    e(r);
+   });
+  } finally {
+   t.finished = !0, u === t && (u = void 0, c = !1), 0 === s.length ? (d = !1, i.onAsyncRunning(!1)) : o();
+  }
+ }
+ var s = [];
+ r.prototype.onRun = function(e) {
+  this.runCallbacks.push(e);
+ }, r.prototype.onSuccess = function(e) {
+  this.successCallbacks.push(e);
+ }, r.prototype.onError = function(e) {
+  this.errorCallbacks.push(e);
+ };
+ var l = 0;
+ r.prototype.chain = function(e) {
+  if (l = n.currentTime, n.logStackTrace(), this.finished !== !0) {
+   if (void 0 === this.queue && (this.queue = this.runCallbacks.slice()), void 0 !== e) return void e();
+   if (0 === this.queue.length) return void a(this, this.successCallbacks);
+   var t = this.queue.shift();
+   t();
+  }
+ }, r.prototype.error = function(e) {
+  if (n.logStackTrace(), this.finished !== !0) throw e = e || new Error("Unknown error"), 
+  e.message && i.onError(e), a(this, this.errorCallbacks, e), e;
+ };
+ var c = !1;
+ r.prototype.retry = function(e, t) {
+  if (this.finished !== !0) {
+   if (t = t || 5, this.queue = void 0, this.retryCounter >= t) return void this.error(e);
+   var i = 1e3 * Math.pow(2, this.retryCounter++);
+   l = n.currentTime + i, c = !1, o();
+  }
+ }, r.prototype.enqueue = function() {
+  s.push(this), o();
+ };
+ var u, d = !1, p = !1;
+ return i.addListener("onUserActive", function() {
+  p = !0;
+ }), i.addListener("onPeriodicRun", o), r;
 }), define("helpers/dropboxHelper", [ "jquery", "underscore", "constants", "core", "utils", "storage", "logger", "settings", "eventMgr", "classes/AsyncTask" ], function(e, t, n, i, r, o, a, s, l, c) {
  function u(t) {
   t.onRun(function() {
