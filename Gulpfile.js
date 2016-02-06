@@ -288,7 +288,7 @@ gulp.task('serve', function() {
 	});
 });
 
-gulp.task('heroku', function() {
+gulp.task('heroku', function(cb) {
 	util.log('Deploying to heroku...');
 	exec('git push heroku master', function(err) {
 		if(err) {
@@ -296,5 +296,6 @@ gulp.task('heroku', function() {
 		} else {
 			util.log('Done.');
 		}
+		cb();
 	});
 });
