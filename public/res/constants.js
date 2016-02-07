@@ -34,21 +34,22 @@ define([], function() {
 	// Site dependent
 	constants.BASE_URL = "http://localhost/";
 	constants.GOOGLE_CLIENT_ID = '382949310060-6ngthlje44340tromolftsps0aooh0os.apps.googleusercontent.com';
-	constants.GITHUB_CLIENT_ID = 'e47fef6055344579799d';
-	constants.GATEKEEPER_URL = "https://stackedit-gatekeeper-localhost.herokuapp.com/";
+	constants.GITHUB_CLIENT_ID = '65d19c6d9be61273c7c9';
+	// constants.GATEKEEPER_URL = "https://stackedit-gatekeeper-localhost.herokuapp.com/";
 	constants.TUMBLR_PROXY_URL = "https://stackedit-tumblr-proxy-local.herokuapp.com/";
 	constants.WORDPRESS_CLIENT_ID = '23361';
 	constants.WORDPRESS_PROXY_URL = "https://stackedit-io-wordpress-proxy.herokuapp.com/";
 
 	if(location.hostname.indexOf("localhost") === 0) {
 		constants.GOOGLE_CLIENT_ID = '382949310060-6ngthlje44340tromolftsps0aooh0os.apps.googleusercontent.com';
-		constants.GITHUB_CLIENT_ID = '710fc67886ab1ae8fee6';
-		constants.GATEKEEPER_URL = "https://stackedit-io-gatekeeper.herokuapp.com/";
-		constants.TUMBLR_PROXY_URL = "https://stackedit-io-tumblr-proxy.herokuapp.com/";
+		constants.GITHUB_CLIENT_ID = 'a5f8aac09510c8db11b7';
+		constants.GATEKEEPER_URL = "https://malavita-localhost-gatekeeper.herokuapp.com/";
 	}
 	if(location.hostname.indexOf("malavita.herokuapp.com") === 0) {
+		constants.GITHUB_CLIENT_ID = '65d19c6d9be61273c7c9';
 		constants.BASE_URL = 'malavita.herokuapp.com';
 		constants.GOOGLE_CLIENT_ID = '382949310060-6ngthlje44340tromolftsps0aooh0os.apps.googleusercontent.com';
+		constants.GATEKEEPER_URL = "https://malavita-localhost-gatekeeper.herokuapp.com/";
 	}
 
 	constants.THEME_LIST = {
