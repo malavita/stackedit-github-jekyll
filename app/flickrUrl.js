@@ -6,11 +6,15 @@ var flickrOptions = {
 };
 var flickr;
 
-flickrapi.tokenOnly(flickrOptions, function(error, api) {
-    if (!error) {
-        flickr = api;
-    }
-});
+try {
+    flickrapi.tokenOnly(flickrOptions, function(error, api) {
+        if (!error) {
+            flickr = api;
+        }
+    });
+} catch(err) {
+    console.log('flickr api error ', err);
+}
 
 exports.gitLinksToImg = function(req, res) {
     if (flickr) {
