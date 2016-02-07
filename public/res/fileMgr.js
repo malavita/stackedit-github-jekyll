@@ -149,6 +149,19 @@ define([
 				$fileTitleElt.click();
 			}, 400);
 		});
+		$(".action-create-post").click(function() {
+			setTimeout(function() {
+				var fileDesc = fileMgr.createFile();
+				var date = new Date();
+				fileDesc.post_metadata = _.extend({}, settings.post_metadata, {
+					title: fileDesc.title,
+					date: [date.getFullYear(), (date.getMonth() + 1), date.getDate()].join('-'),
+					category: 'blog'
+				});
+				fileMgr.selectFile(fileDesc);
+				$fileTitleElt.click();
+			}, 400);
+		});
 		$('.action-remove-file-confirm').click(function() {
 			$('.modal-remove-file-confirm').modal('show');
 		});

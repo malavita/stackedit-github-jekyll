@@ -5,6 +5,7 @@ define([
 	"crel",
 	"editor",
 	"extensions/flickrUrls",
+	"require",
 	"layout",
 	"constants",
 	"utils",
@@ -18,7 +19,7 @@ define([
 	"text!html/tooltipSettingsPdfOptions.html",
 	"storage",
 	'pagedown'
-], function($, _, crel, editor, flickrUrls, layout, constants, utils, storage, settings, eventMgr, MonetizeJS, bodyEditorHTML, bodyViewerHTML, settingsTemplateTooltipHTML, settingsPdfOptionsTooltipHTML) {
+], function($, _, crel, editor, flickrUrls, require, layout, constants, utils, storage, settings, eventMgr, MonetizeJS, bodyEditorHTML, bodyViewerHTML, settingsTemplateTooltipHTML, settingsPdfOptionsTooltipHTML) {
 
 	var core = {};
 
@@ -30,6 +31,10 @@ define([
 	var userActive = false;
 	var windowUnique = true;
 	var userLastActivity = 0;
+	// elements
+	var imageCheckboxEl;
+	var insertImageEl;
+
 
 	function setUserActive() {
 		isUserReal = true;
@@ -252,11 +257,20 @@ define([
 		// Custom insert image dialog
 		pagedownEditor.hooks.set("insertImageDialog", function(callback) {
 			// implement custom hook here
-			core.insertLinkCallback = flickrUrls.onInsertImage.bind(flickrUrls, callback);
+			core.insertLinkCallback = flickrUrls.onInsertImage.bind(flickrUrls, function(link, options) {
+				var currentFile = require('fileMgr').currentFile;
+				if (link && options.isImageChecked && currentFile.post_metadata) {
+					currentFile.post_metadata = _.extend(currentFile.post_metadata, {
+						image: link
+					});
+				}
+				callback(link, options);
+			});
 			if(core.catchModal) {
 				return true;
 			}
 			utils.resetModalInputs();
+			imageCheckboxEl.checked = true;
 			$(".modal-insert-image").modal();
 			return true;
 		});
@@ -368,14 +382,14 @@ define([
 		}
 		monetize.getPaymentsImmediate(function(err, payments) {
 			removeAlerts();
-			if(!isSponsor(payments)) {
-				_.each(document.querySelectorAll('.modal-body'), function(modalBodyElt) {
-					var $elt = $('<div class="alert alert-danger">Please consider <a href="#">sponsoring StackEdit</a> for $5/year (or <a href="#">sign in</a> if you\'re already a sponsor).</div>');
-					$elt.find('a').click(performPayment);
-					modalBodyElt.insertBefore($elt[0], modalBodyElt.firstChild);
-					$alerts = $alerts.add($elt);
-				});
-			}
+			// if(!isSponsor(payments)) {
+			// 	_.each(document.querySelectorAll('.modal-body'), function(modalBodyElt) {
+			// 		var $elt = $('<div class="alert alert-danger">Please consider <a href="#">sponsoring StackEdit</a> for $5/year (or <a href="#">sign in</a> if you\'re already a sponsor).</div>');
+			// 		$elt.find('a').click(performPayment);
+			// 		modalBodyElt.insertBefore($elt[0], modalBodyElt.firstChild);
+			// 		$alerts = $alerts.add($elt);
+			// 	});
+			// }
 		});
 	}, 3000);
 
@@ -383,6 +397,8 @@ define([
 
 	// Other initialization that are not prioritary
 	eventMgr.addListener("onReady", function() {
+		imageCheckboxEl = document.getElementById('checkbox-cover-image');
+		insertImageEl = document.getElementById('input-insert-image');
 
 		$(document.body).on('shown.bs.modal', '.modal', function() {
 			var $elt = $(this);
@@ -414,10 +430,12 @@ define([
 				core.insertLinkCallback = undefined;
 			}
 		});
+
 		$(".action-insert-image").click(function(e) {
-			var value = utils.getInputTextValue($("#input-insert-image"), e);
+			var value = utils.getInputTextValue(insertImageEl, e);
+			var options = { isImageChecked: imageCheckboxEl.checked };
 			if(value !== undefined) {
-				core.insertLinkCallback(value);
+				core.insertLinkCallback(value, options);
 				core.insertLinkCallback = undefined;
 			}
 		});
@@ -578,7 +596,7 @@ define([
 			document.getElementById('input-settings-theme').innerHTML = themeOptions;
 		}
 
-		$('.modal-header').append('<a class="dialog-header-message" href="http://classeur.io" target="_blank"><i class="icon-megaphone"></i> Try Classeur beta!</a>');
+		// $('.modal-header').append('<a class="dialog-header-message" href="http://classeur.io" target="_blank"><i class="icon-megaphone"></i> Try Classeur beta!</a>');
 		checkPayment();
 	});
 

@@ -4,11 +4,13 @@ define([
     "crel",
     "utils",
     "classes/Extension",
+    "require",
     "text!html/dialogMetadata.html"
-], function($, _, crel, utils, Extension, dialogMetadataHTML) {
+], function($, _, crel, utils, Extension, require, dialogMetadataHTML) {
 
     var buttonMetadata = new Extension("buttonMetadata", 'Button "Metadata"', false, true);
     var $button;
+    var metadata;
     var isOffline = false;
 
     buttonMetadata.onCreateButton = function() {
@@ -21,21 +23,41 @@ define([
         $button = $(button);
         $button.click(function() {
             // invoke dialog
+            $(".modal-metadata-dialog").remove();
+            utils.addModal('modal-metadata-dialog', _.template(dialogMetadataHTML, {
+                metadata: metadata
+            }));
+            $(".action-metadata-update").on('click', clickHandler);
 			$(".modal-metadata-dialog").modal();
         });
+
         return button;
     };
 
     buttonMetadata.onFileOpen = function(fileDesc) {
-        var metadata = fileDesc.post_metadata;
+        metadata = fileDesc.post_metadata;
         if (!metadata) {
             $button.addClass("disabled");
         } else {
             $button.removeClass("disabled");
-            $(".modal-metadata-dialog").remove();
-            utils.addModal('modal-metadata-dialog', _.template(dialogMetadataHTML, metadata));
         }
 	};
+
+    buttonMetadata.onTitleChanged = function(fileDesc) {
+        fileDesc.post_metadata = _.extend(metadata, {
+            title: fileDesc.title
+        });
+    };
+
+    function clickHandler() {
+        var fileMgr = require('fileMgr');
+        var inputEls = $(".modal-metadata-dialog")[0].getElementsByTagName('input');
+        var newMetadata = Array.prototype.reduce.call(inputEls, function(result, el) {
+            result[el.name] = el.value;
+            return result;
+        }, {});
+        fileMgr.currentFile.post_metadata = _.extend(metadata, newMetadata);
+    }
 
     return buttonMetadata;
 

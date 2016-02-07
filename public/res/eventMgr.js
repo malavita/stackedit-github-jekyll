@@ -33,6 +33,7 @@ define([
 	"extensions/emailConverter",
 	"extensions/scrollSync",
 	"extensions/buttonSync",
+	"extensions/buttonMetadata",
 	"extensions/buttonPublish",
 	"extensions/buttonStat",
 	"extensions/buttonHtmlCode",

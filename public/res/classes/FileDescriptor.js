@@ -7,6 +7,7 @@ define([
 	function FileDescriptor(fileIndex, title, syncLocations, publishLocations) {
 		this.fileIndex = fileIndex;
 		this._title = title || storage[fileIndex + ".title"];
+		this._post_metadata = JSON.parse(storage[fileIndex + ".post_metadata"] || 'null');
 		this._editorScrollTop = parseInt(storage[fileIndex + ".editorScrollTop"]) || 0;
 		this._editorStart = parseInt(storage[fileIndex + ".editorEnd"]) || 0;
 		this._editorEnd = parseInt(storage[fileIndex + ".editorEnd"]) || 0;
@@ -22,6 +23,15 @@ define([
 			set: function(title) {
 				this._title = title;
 				storage[this.fileIndex + ".title"] = title;
+			}
+		});
+		Object.defineProperty(this, 'post_metadata', {
+			get: function() {
+				return this._post_metadata;
+			},
+			set: function(metadata) {
+				this._post_metadata = metadata;
+				storage[this.fileIndex + ".post_metadata"] = JSON.stringify(metadata);
 			}
 		});
 		Object.defineProperty(this, 'content', {

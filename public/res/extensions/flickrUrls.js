@@ -10,10 +10,9 @@ define([
 
     var isOffline = false;
 
-    flickrUrls.onInsertImage = function(callback, link) {
+    flickrUrls.onInsertImage = function(callback, link, options) {
         var flickrUrl;
         var imageId;
-        var result;
         // check wether link contains short flickr url
         if (!isOffline && link && (link.indexOf('flic.kr') >=0)) {
             flickrUrl = link.split(' ')[0];
@@ -27,7 +26,7 @@ define([
             }).done(function(data) {
                 // TODO: custom dialog for flickr images(sizes)
                 var imageLink = _.result(_.findWhere(data.sizes.size, {label: 'Large'}), 'source');
-                callback(imageLink);
+                callback(imageLink, options);
             }).fail(function(jqXHR) {
                 var error = {
                     code: jqXHR.status,
@@ -37,7 +36,7 @@ define([
                 console.log(error);
             });
         } else {
-            callback(link);
+            callback(link, options);
         }
     };
 
