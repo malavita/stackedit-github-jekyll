@@ -58,7 +58,16 @@ define([
 			'}'
 		].join('\n'),
 		couchdbUrl: constants.COUCHDB_URL,
-		extensionSettings: {}
+		extensionSettings: {},
+		post_metadata: {
+			layout: 'post',
+			published: true,
+			excerpt_separator: '<!--more-->',
+			title: '',
+			date: '',
+			category: 'blog',
+			image: ''
+		}
 	};
 
 	try {
