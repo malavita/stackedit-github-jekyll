@@ -1,9 +1,11 @@
 define([
 	"utils",
+	"underscore",
 	"classes/Provider",
 	"settings",
+	"fileMgr",
 	"helpers/githubHelper"
-], function(utils, Provider, settings, githubHelper) {
+], function(utils, _, Provider, settings, fileMgr, githubHelper) {
 
 	var githubProvider = new Provider("github", "GitHub");
 	githubProvider.publishPreferencesInputIds = [
@@ -24,6 +26,15 @@ define([
 
 	githubProvider.publish = function(publishAttributes, frontMatter, title, content, callback) {
 		var commitMsg = settings.commitMsg;
+		var metadata = fileMgr.currentFile.post_metadata;
+		var encodedMetadata;
+		if (metadata) {
+			encodedMetadata = _.reduce(metadata, function(result, value, key) {
+				return result + key + ': ' + value + '\n';
+			}, '');
+			encodedMetadata = ['---\n', encodedMetadata, '---'].join('');
+			content = encodedMetadata + content;
+		}
 		githubHelper.upload(publishAttributes.repository, publishAttributes.username, publishAttributes.branch, publishAttributes.path, content, commitMsg, function(err, username) {
 			publishAttributes.username = username;
 			callback(err);
