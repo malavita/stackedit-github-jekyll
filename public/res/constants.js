@@ -1,8 +1,8 @@
 define([], function() {
 	var constants = {};
 	constants.VERSION = "4.3.12";
-	constants.MAIN_URL = "https://stackedit.io/";
-	constants.GOOGLE_ANALYTICS_ACCOUNT_ID = "UA-39556145-1";
+	constants.MAIN_URL = "https://malavita.herokuapp.com/";
+	constants.GOOGLE_ANALYTICS_ACCOUNT_ID = "UA-53426549-2";
 	constants.GOOGLE_API_KEY = "eUomTIN9mvBPAVA3bUtpF85S";
 	constants.GOOGLE_DRIVE_APP_ID = "241271498917";
 	constants.DROPBOX_APP_KEY = "lq6mwopab8wskas";
